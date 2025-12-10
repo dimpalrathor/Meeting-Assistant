@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydub
+python-multipart
+faster-whisper
+google-generativeai
+streamlit
+requests
+audiorecorder
