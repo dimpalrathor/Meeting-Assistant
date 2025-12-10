@@ -2,7 +2,8 @@
 
 import streamlit as st
 import requests
-from audiorecorder import audiorecorder
+# from audiorecorder import audiorecorder   # REMOVE THIS (Render cannot install PyAudio)
+# No replacement needed here
 import io
 import wave
 
@@ -474,27 +475,16 @@ with tab_record:
     st.info(" **Tip:** Find a quiet environment for best recording quality")
     st.markdown("<br>", unsafe_allow_html=True)
     
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        audio = audiorecorder(" Start Recording", " Stop Recording")
-
     recorded_audio = None
 
-    if len(audio) > 0:
-        st.success(" Recording captured successfully!")
+# Render-compatible recorder
+recorded_file = st.audio_input("🎤 Start Recording")
 
-        # Convert raw PCM data into a VALID WAV file
-        wav_buffer = io.BytesIO()
-        with wave.open(wav_buffer, "wb") as wav_file:
-            wav_file.setnchannels(audio.channels)
-            wav_file.setsampwidth(audio.sample_width)
-            wav_file.setframerate(audio.frame_rate)
-            wav_file.writeframes(audio.raw_data)
+if recorded_file:
+    st.success(" Recording captured successfully!")
+    recorded_audio = recorded_file.read()
+    st.audio(recorded_audio, format="audio/wav")
 
-        recorded_audio = wav_buffer.getvalue()
-
-        # Play back the valid WAV
-        st.audio(recorded_audio, format="audio/wav")
 
 # Decide which input will be processed
 audio_bytes = None
